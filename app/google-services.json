@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1011266485600",
+    "project_id": "icolor-6ad74",
+    "storage_bucket": "icolor-6ad74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011266485600:android:306d2e84c8269bc846b205",
+        "android_client_info": {
+          "package_name": "com.example.icoloer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011266485600-ba15dqoisv884ukdnf2muds80beeh9dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUsnfNCjrXxG0KszhQTEsM9dFCKD5fiAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011266485600-ba15dqoisv884ukdnf2muds80beeh9dh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011266485600:android:d9090692181ae2eb46b205",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011266485600-ba15dqoisv884ukdnf2muds80beeh9dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUsnfNCjrXxG0KszhQTEsM9dFCKD5fiAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011266485600-ba15dqoisv884ukdnf2muds80beeh9dh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

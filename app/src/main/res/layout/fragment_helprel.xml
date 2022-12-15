@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/help"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".helprel">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="292dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/logobest"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/bbbb"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="140dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="133dp"
+        android:layout_marginBottom="43dp"
+        android:backgroundTint="#7BD1E8"
+        android:fontFamily="sans-serif-smallcaps"
+        android:onClick="didaacc"
+        android:text="signOUT"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="358dp"
+        android:layout_height="304dp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Icolor is a game that test your ability to Distinguish the colors over small quiz:  The quiz is that u have 4 circles or more and one of  this circles has a different color and you need to find it , it seems easy at first but it is not .  You can play the game alone or with foe . "
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#2E2B1E"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        app:layout_constraintBottom_toTopOf="@+id/bbbb"
+        app:layout_constraintEnd_toEndOf="@+id/bbbb"
+        app:layout_constraintStart_toStartOf="@+id/bbbb"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <ImageView
+        android:id="@+id/BACKTO"
+        android:layout_width="20dp"
+        android:layout_height="32dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/back"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="32dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
