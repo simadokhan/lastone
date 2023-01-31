@@ -8,7 +8,10 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,9 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
  * Use the {@link Settings#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Settings extends Fragment {
+public class Settings extends Fragment implements AdapterView.OnItemSelectedListener {
 private ImageView BACKhome;
 private FirebaseAuth mAuth;
+private Spinner spinner;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,12 +77,27 @@ private FirebaseAuth mAuth;
         super.onStart();
         BACKhome=getView().findViewById(R.id.backhome);
         mAuth = FirebaseAuth.getInstance();
-
+        spinner=getView().findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter;
+        adapter = ArrayAdapter.createFromResource(this.getContext(),R.array.All, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
         BACKhome.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         });
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 }

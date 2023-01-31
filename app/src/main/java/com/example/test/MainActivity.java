@@ -1,13 +1,18 @@
 package com.example.test;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,14 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"black\">"+getString(R.string.app_name)+"</front>"));
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayout, new HomePage());
         ft.commit();
+
     }
-//    BallGenerator bg = new BallGenerator();
-//        System.out.println(bg.());
-//    Map<String, Integer> new_ball = bg.diffrentBallGenerator("Hard");
-//        System.out.println(new_ball.get("red"));
-//        System.out.println(new_ball.get("blue"));
-//        System.out.println("==========");
+
 }

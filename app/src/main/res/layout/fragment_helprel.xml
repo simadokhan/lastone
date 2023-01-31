@@ -12,10 +12,10 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="292dp"
-        android:layout_height="180dp"
+        android:layout_width="192dp"
+        android:layout_height="148dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/logobest"
+        android:src="@drawable/hi"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintEnd_toEndOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="@+id/textView9"
@@ -48,8 +48,8 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="358dp"
-        android:layout_height="304dp"
+        android:layout_width="355dp"
+        android:layout_height="336dp"
         android:layout_marginTop="60dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Icolor is a game that test your ability to Distinguish the colors over small quiz:  The quiz is that u have 4 circles or more and one of  this circles has a different color and you need to find it , it seems easy at first but it is not .  You can play the game alone or with foe . "

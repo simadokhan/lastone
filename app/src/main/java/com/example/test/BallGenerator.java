@@ -27,7 +27,7 @@ public class BallGenerator {
         this.g_value = new Random().nextInt((245 - 50) + 1) + 50;
         this.b_value = new Random().nextInt((245 - 50) + 1) + 50;
     }
-    int hard= new Random().nextInt((10 - 1) + 1) + 1;
+    int hard= new Random().nextInt((5 - 1) + 1) + 1;
     int new_r,new_b,new_g;
     public int Hardr() {
         Random rnd = new Random();
@@ -52,7 +52,7 @@ public class BallGenerator {
         ) + (this.b_value - hard);
         return new_b;
     }
-    int mid= new Random().nextInt((30 - 10) + 1) + 10;
+    int mid= new Random().nextInt((30 - 6) + 1) + 6;
     public int midr() {
         Random rnd = new Random();
         new_r = rnd.nextInt(
@@ -76,7 +76,7 @@ public class BallGenerator {
         ) + (this.b_value - mid);
         return new_b;
     }
-    int es= new Random().nextInt((50 - 20) + 1) + 20;
+    int es= new Random().nextInt((45 - 30) + 1) +30;
     public int esr() {
         Random rnd = new Random();
         new_r = rnd.nextInt(

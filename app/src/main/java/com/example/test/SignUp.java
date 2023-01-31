@@ -18,9 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +36,6 @@ public class SignUp extends Fragment {
     private Button donesignup;
     private TextView gotologin;
     private FirebaseAuth mAuth;
-
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -85,6 +88,7 @@ public class SignUp extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         attachComponents();
         donesignup.setOnClickListener(view -> check());
         gotologin.setOnClickListener(view -> {
@@ -94,53 +98,50 @@ public class SignUp extends Fragment {
         });
     }
 
-    public void attachComponents(){
+    public void attachComponents() {
         mAuth = FirebaseAuth.getInstance();
         etemailsignup = getView().findViewById(R.id.emailsignup);
         etpasswordsignup = getView().findViewById(R.id.etPasssignup);
-        etpassword2signup= getView().findViewById(R.id.passwords2);
+        etpassword2signup = getView().findViewById(R.id.passwords2);
         gotologin = getView().findViewById(R.id.gotologin);
         donesignup = getView().findViewById(R.id.passforgot);
     }
 
-    public void check(){
-        String email,password, password2;
-        email=etemailsignup.getText().toString().trim();
-        password=etpasswordsignup.getText().toString().trim();
-        password2=etpassword2signup.getText().toString().trim();
-        if(email.isEmpty()||password.isEmpty()|| password2.isEmpty()){
+    public void check() {
+        String email, password, password2;
+        email = etemailsignup.getText().toString().trim();
+        password = etpasswordsignup.getText().toString().trim();
+        password2 = etpassword2signup.getText().toString().trim();
+        if (email.isEmpty() || password.isEmpty() || password2.isEmpty()) {
             Toast.makeText(getContext(), "some are empty", Toast.LENGTH_SHORT).show();
             etemailsignup.requestFocus();
             etpasswordsignup.requestFocus();
             etpassword2signup.requestFocus();
             return;
         }
-        if(!isEmailValid(email)){
+        if (!isEmailValid(email)) {
             Toast.makeText(getContext(), "wrong email pattern!", Toast.LENGTH_SHORT).show();
             etemailsignup.requestFocus();
             return;
         }
-        if(password.length()<8){
+        if (password.length() < 8) {
             etpasswordsignup.setError("wrong password");
-          // Toast.makeText(getContext(), "wrong password", Toast.LENGTH_SHORT).show();
-       etpasswordsignup.requestFocus();
-         return;
-       }
-        if(!password.equals(password2)){
+            // Toast.makeText(getContext(), "wrong password", Toast.LENGTH_SHORT).show();
+            etpasswordsignup.requestFocus();
+            return;
+        }
+        if (!password.equals(password2)) {
             etpassword2signup.setError("passwords are not the same ");
             etpassword2signup.requestFocus();
             return;
         }
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(getContext(), "sign up is successful", Toast.LENGTH_SHORT).show();
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.frameLayout, new HomePage());
-                    ft.commit();
-                }
+        mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
+            Toast.makeText(getContext(), "Account created.", Toast.LENGTH_SHORT).show();
+            if (mAuth.getCurrentUser() != null) {
+                mAuth.signOut();
             }
+        }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
         });
-}
-}
+    }
+    }
