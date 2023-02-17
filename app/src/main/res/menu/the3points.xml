@@ -2,7 +2,13 @@
 <menu
 
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/turn_the_music_on" />
-    <item android:title="@string/turn_the_sound_on" />
+    <item android:id="@+id/musicON"
+        android:title="@string/turn_the_music_on" />
+    <item android:id="@+id/soundON"
+        android:title="@string/turn_the_sound_on" />
+    <item android:id="@+id/musicoff"
+        android:title="turn the music off" />
+    <item android:id="@+id/soundoff"
+        android:title="turn the sound off" />
 
 </menu>

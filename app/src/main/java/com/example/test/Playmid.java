@@ -1,18 +1,13 @@
 package com.example.test;
-
 import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import java.text.DateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -41,15 +33,17 @@ public class Playmid extends Fragment {
     private int i=from0to3();
     private TextView timer,Score;
     private final long starttimeinmillis=60000;
+    private String userEmail;
     private CountDownTimer mcountdowntimer;
     private AlertDialog.Builder builder;
     private long mtimeleft=starttimeinmillis;
     private boolean mtimerrunning;
     private final Date date1= Calendar.getInstance().getTime() ;
     private final String dateestring = DateFormat.getInstance().format(date1);
-      private String SS = "S";
-    protected Score score=new Score(0,dateestring,0,0);
+   FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    protected Score score;
     protected FireBaseServices db;
+    private  BestScores bestScores;
 
 
 
@@ -101,6 +95,12 @@ public class Playmid extends Fragment {
     }
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            userEmail= currentUser.getEmail();
+        }
+        score=new Score(dateestring,0,"Mid",userEmail);
+        bestScores = new BestScores(0,userEmail);
         connect();
         mcountdowntimer=new CountDownTimer(mtimeleft,100) {
             @Override
@@ -115,13 +115,16 @@ public class Playmid extends Fragment {
         }.start();
         game();
         exit.setOnClickListener(view1 -> {
-
-            db.getFire().collection("SCOREMID")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
             builder.setTitle("EXIT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("ok", (dialogInterface, i) -> {
+                db.getFire().collection("SCORE")
+                        .add(score)
+                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                BestScore();
+                db.getFire().collection("best SCORE")
+                        .add(bestScores)
+                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameLayout, new HomePage());
                 ft.commit();
@@ -151,9 +154,9 @@ public class Playmid extends Fragment {
             if(g!=i){
                 CIRCLE[g].setColorFilter(Color.rgb(rgb.getR_value(), rgb.getG_value(), rgb.getB_value()));
             }
-            if (score.getScoreMID()<= 500 ){
+            if (score.getScore()<= 500 ){
                 CIRCLE[i].setColorFilter(Color.rgb(rgb.midr(), rgb.midg(), rgb.midb()));}
-            else if (score.getScoreMID()>500 && score.getScoreMID()<2000 ){
+            else if (score.getScore()>500 && score.getScore()<2000 ){
                 CIRCLE[i].setColorFilter(Color.rgb(rgb.midr(), rgb.getG_value(),rgb.midb()));
             }
             else  {
@@ -186,22 +189,31 @@ public class Playmid extends Fragment {
             game();
             resetTime();
 
-        }else if (score.getScoreMID()<150 ){
+        }else if (score.getScore()<150 ){
 
-            db.getFire().collection("SCORE mid")
+            db.getFire().collection("SCORE")
                     .add(score)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             builder.setTitle("bad luck").setMessage("I knew you didn't have it in you TwT  ").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         }
-        else if (score.getScoreMID()>150 && score.getScoreMID()<600 ){
+        else if (score.getScore()>150 && score.getScore()<600 ){
 
-            db.getFire().collection("SCOREMID")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -210,10 +222,15 @@ public class Playmid extends Fragment {
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         }
-        else if (score.getScoreMID()>600 && score.getScoreMID()<1500 ){
+        else if (score.getScore()>600 && score.getScore()<1500 ){
 
-            db.getFire().collection("SCOREMID")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -224,8 +241,13 @@ public class Playmid extends Fragment {
         }
         else {
 
-            db.getFire().collection("SCOREMID")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -264,21 +286,26 @@ public class Playmid extends Fragment {
     }
     private int Scoreset(){
         if (mtimeleft>= 55000){
-            score.setScoreMID(score.getScoreMID()+50) ;
+            score.setScore(score.getScore()+50) ;
         }
-        else if(mtimeleft<55000&&mtimeleft> 50000 ){
-            score.setScoreMID(score.getScoreMID()+40);
+        else if(mtimeleft> 50000){
+            score.setScore(score.getScore()+40);
         }
-        else if(mtimeleft<=50000&&mtimeleft>= 45000 ){
-            score.setScoreMID(score.getScoreMID()+30);
+        else if(mtimeleft>= 45000){
+            score.setScore(score.getScore()+30);
         }
-        else if(mtimeleft<45000&&mtimeleft>= 35000 ){
-            score.setScoreMID(score.getScoreMID()+20);
+        else if(mtimeleft>= 35000){
+            score.setScore(score.getScore()+20);
         }
         else {
-            score.setScoreMID(score.getScoreMID()+10);
+            score.setScore(score.getScore()+10);
         }
-        return score.getScoreMID();
+        return score.getScore();
+    }
+    private  void  BestScore(){
+        if (score.getScore()> bestScores.getBestScore()){
+            bestScores.setBestScore(score.getScore());
+        }
     }
 
 }

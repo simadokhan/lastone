@@ -2,14 +2,15 @@ package com.example.test;
 
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,19 +18,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,13 +43,15 @@ public class HomePage extends Fragment {
     Button help,playHARD,playMID,playEASY,Carrer;
     protected FireBaseServices db;
     protected TextView bestscore;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
 
 
-//    MediaPlayer player=MediaPlayer.create(this,) the music thing in the classroom
+    private ArrayList<BestScores>bestScore;
+    private BestScores bestScores;
+    String userEmail ;
 
-    //MediaPlayer mysong;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -94,56 +98,45 @@ public class HomePage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_page, container, false);
+
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onStart() {
-        super.onStart();
-    //    Startmusic();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser != null){
+//            userEmail= currentUser.getEmail();
+//        }
         connect();
-     db.getFire().collection("SCOREHARD")
-                 .get().toString();
-
-        help.setOnClickListener(view -> {
+        help.setOnClickListener(view1-> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new helprel());
             ft.commit();
         });
 
-        playHARD.setOnClickListener(view -> {
+        playHARD.setOnClickListener(view1 -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new Playhard());
             ft.commit();
         });
-        playMID.setOnClickListener(view -> {
+        playMID.setOnClickListener(view1 -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new Playmid());
             ft.commit();
         });
-        playEASY.setOnClickListener(view -> {
+        playEASY.setOnClickListener(view1 -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameLayout, new PlaySinglePlayer());
+            ft.replace(R.id.frameLayout, new PlayEs());
             ft.commit();
         });
-        Carrer.setOnClickListener(view -> {
+        Carrer.setOnClickListener(view1 -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameLayout, new Settings());
+            ft.replace(R.id.frameLayout, new Career());
             ft.commit();
 
         });
-//        db.getFire().collection("SCOREHARD").get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    if (!queryDocumentSnapshots.isEmpty()){
-//                        List<DocumentSnapshot> list= queryDocumentSnapshots.getDocuments();
-//                        for (DocumentSnapshot d : list)
-//                            Score p = d.
-//                    }
-//                });
-//       bestscore.setText("best score :"+ db.getFire().collection("SCOREHARD")
-//               .get().toString());
-                }
-
+    }
 
     private void connect() {
         mAuth = FirebaseAuth.getInstance();
@@ -154,17 +147,32 @@ public class HomePage extends Fragment {
         Carrer=getView().findViewById(R.id.carrer1);
         db= FireBaseServices.getinstance();
         bestscore=getView().findViewById(R.id.bestscore);
-       // mediaPlayer = MediaPlayer.create(this.getContext(),R.raw.music1);
+        mediaPlayer=MediaPlayer.create(getContext(),R.raw.music1);
+
+
+    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.the3points,menu);
 
 
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.the3points,menu);
-        //super.onCreateOptionsMenu(menu, inflater);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+
+            case R.id.musicON:
+                mediaPlayer.start();
+            case R.id.musicoff:
+                mediaPlayer.stop();
+            case R.id.soundoff:
+               // mediaPlayer.stop();
+            case R.id.soundON:
+                //mediaPlayer.start();
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
-//    public void Startmusic(){
-//        mediaPlayer.start();
-//    }
-}
+    }

@@ -97,15 +97,10 @@ public class Login extends Fragment {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new Forgotpassword());
             ft.commit();
-            Toast.makeText(getContext(), "test1", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "OH OOop", Toast.LENGTH_SHORT).show();
 
         });
-        tvForgot.setOnClickListener(view14 -> {
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameLayout, new Forgotpassword());
-            ft.commit();
-            Toast.makeText(getContext(), "test2", Toast.LENGTH_SHORT).show();
-        });
+
     }
     public void check(){
         String email,password;
@@ -123,18 +118,15 @@ public class Login extends Fragment {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(getContext(), "Logged in", Toast.LENGTH_SHORT).show();
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.frameLayout, new HomePage());
-                    ft.commit();
-                }
-                else {
-                    Toast.makeText(getContext(), "failed to login ", Toast.LENGTH_SHORT).show();
-                }
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(getActivity(), task -> {
+            if (task.isSuccessful()){
+                Toast.makeText(getContext(), "Logged in", Toast.LENGTH_SHORT).show();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout, new HomePage());
+                ft.commit();
+            }
+            else {
+                Toast.makeText(getContext(), "failed to login ", Toast.LENGTH_SHORT).show();
             }
         });
     }

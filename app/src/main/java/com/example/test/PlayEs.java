@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.DateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -28,23 +30,23 @@ import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PlaySinglePlayer#newInstance} factory method to
+ * Use the {@link PlayEs#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlaySinglePlayer extends Fragment {
+public class PlayEs extends Fragment {
 private ImageView circle1 , circle2 , circle3 , circle4 , exit;
 private int i=from0to3();
 private TextView timer,Score;
-    private Date date1= Calendar.getInstance().getTime() ;
-    private String dateestring = DateFormat.getInstance().format(date1);
+private final Date date1= Calendar.getInstance().getTime() ;
+private final String dateestring = DateFormat.getInstance().format(date1);
 private final long starttimeinmillis=60000;
-    private AlertDialog.Builder builder;
+private AlertDialog.Builder builder;
 private long mtimeleft=starttimeinmillis;
-protected FireBaseServices db;
-protected Score score=new Score(0,dateestring,0,0);
-
-//private Fragment fragment = (Fragment) getFragmentManager().findFragmentById(R.id.esmode);
-
+private FireBaseServices db;
+public String userEmail;
+FirebaseAuth  mAuth = FirebaseAuth.getInstance();
+protected Score score;
+    private  BestScores bestScores;
 private boolean mtimerrunning;
 
     // TODO: define present correct ImageView holder
@@ -57,7 +59,7 @@ private boolean mtimerrunning;
     private String mParam1;
     private String mParam2;
 
-    public PlaySinglePlayer() {
+    public PlayEs() {
         // Required empty public constructor
     }
     /**
@@ -66,11 +68,11 @@ private boolean mtimerrunning;
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PlaySinglePlayer.
+     * @return A new instance of fragment PlayEs.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlaySinglePlayer newInstance(String param1, String param2) {
-        PlaySinglePlayer fragment = new PlaySinglePlayer();
+    public static PlayEs newInstance(String param1, String param2) {
+        PlayEs fragment = new PlayEs();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -88,21 +90,31 @@ private boolean mtimerrunning;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_playsingleplayer, container, false);
+        return inflater.inflate(R.layout.fragment_playeasy, container, false);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+           userEmail= currentUser.getEmail();
+        }
+        score=new Score(dateestring,0,"easy",userEmail);
+        bestScores = new BestScores(0,userEmail);
         connect();
         game();
         StartTimer();
         exit.setOnClickListener(view1 -> {
-            db.getFire().collection("SCOREEASY")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
             builder.setTitle("EXIT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("ok", (dialogInterface, i) -> {
+                db.getFire().collection("SCORE")
+                        .add(score)
+                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                BestScore();
+                db.getFire().collection("best SCORE")
+                        .add(bestScores)
+                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameLayout, new HomePage());
                 ft.commit();
@@ -132,10 +144,10 @@ private boolean mtimerrunning;
             if(g!=i){
                 CIRCLE[g].setColorFilter(Color.rgb(rgb.getR_value(), rgb.getG_value(), rgb.getB_value()));
             }
-            if (score.getScoreES()<= 500 ){
+            if (score.getScore()<= 500 ){
 
                 CIRCLE[i].setColorFilter(Color.rgb(rgb.esr(), rgb.esg(), rgb.esb()));}
-            else if (score.getScoreES()>500 && score.getScoreES()<2000 ){
+            else if (score.getScore()>500 && score.getScore()<2000 ){
                 CIRCLE[i].setColorFilter(Color.rgb(rgb.esr(), rgb.getG_value(),rgb.esb()));
               //  fragment.getView().setBackgroundColor(Color.RED);
             }
@@ -144,7 +156,6 @@ private boolean mtimerrunning;
             }
         }
         circle1.setOnClickListener(view12 -> isRight(0));
-
         circle2.setOnClickListener(view12 -> isRight(1));
         circle3.setOnClickListener(view12 -> isRight(2));
         circle4.setOnClickListener(view12 -> isRight(3));
@@ -156,10 +167,15 @@ private boolean mtimerrunning;
             i=from0to3();
             Score.setText("score: "+Scoreset());
             game();
-        }else if (score.getScoreES()<500 ){
+        }else if (score.getScore()<500 ){
 
-            db.getFire().collection("SCOREEASY")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -168,11 +184,16 @@ private boolean mtimerrunning;
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         }
-        else if (score.getScoreES()>500 && score.getScoreES()<2000 ){
+        else if (score.getScore()>500 && score.getScore()<2000 ){
 
 
-            db.getFire().collection("SCOREEASY")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -181,10 +202,15 @@ private boolean mtimerrunning;
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         }
-        else if (score.getScoreES()>2000 && score.getScoreES()<4000 ){
+        else if (score.getScore()>2000 && score.getScore()<4000 ){
 
-            db.getFire().collection("SCOREEASY")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -196,8 +222,13 @@ private boolean mtimerrunning;
         else {
 
 
-            db.getFire().collection("SCOREEASY")
+            db.getFire().collection("SCORE")
                     .add(score)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            BestScore();
+            db.getFire().collection("best SCORE")
+                    .add(bestScores)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -233,27 +264,31 @@ private boolean mtimerrunning;
 }
     private int Scoreset(){
         if (mtimeleft>= 55000){
-            score.setScoreES(score.getScoreES()+50);
+            score.setScore(score.getScore()+50);
         }
         else if(mtimeleft> 50000){
-            score.setScoreES(score.getScoreES()+40);
+            score.setScore(score.getScore()+40);
 
         }
         else if(mtimeleft>= 45000){
-            score.setScoreES(score.getScoreES()+30);
+            score.setScore(score.getScore()+30);
 
         }
         else if(mtimeleft>= 35000){
-            score.setScoreES(score.getScoreES()+20);
+            score.setScore(score.getScore()+20);
         }
         else {
-            score.setScoreES(score.getScoreES()+10);
+            score.setScore(score.getScore()+10);
 
         }
-        return score.getScoreES();
+        return score.getScore();
     }
 
-
+    private  void  BestScore(){
+        if (score.getScore()> bestScores.getBestScore()){
+            bestScores.setBestScore(score.getScore());
+        }
+    }
 
 }
 

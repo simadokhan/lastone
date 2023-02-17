@@ -108,8 +108,7 @@
         android:backgroundTint="#A2F1EF"
         android:fontFamily="sans-serif-smallcaps"
         android:onClick="didaacc"
-        android:text="MID
-        mode"
+        android:text="MID mode"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
@@ -156,8 +155,7 @@
         android:backgroundTint="#AEBFF1"
         android:fontFamily="sans-serif-smallcaps"
         android:onClick="didaacc"
-        android:text="HARD
-    mode"
+        android:text="@string/hard_mode"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"

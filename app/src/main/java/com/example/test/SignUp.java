@@ -90,7 +90,12 @@ public class SignUp extends Fragment {
         super.onStart();
 
         attachComponents();
-        donesignup.setOnClickListener(view -> check());
+        donesignup.setOnClickListener(view -> {
+            check();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayout, new HomePage());
+            ft.commit();
+        });
         gotologin.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new Login());

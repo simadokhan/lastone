@@ -17,14 +17,14 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
-            android:name="com.example.test.HomePage"
+            android:name="com.example.test.Login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_home_page" />
+            tools:layout="@layout/fragment_login" />
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

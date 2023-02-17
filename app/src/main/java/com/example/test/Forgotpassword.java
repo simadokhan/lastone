@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,8 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class Forgotpassword extends Fragment {
 private EditText email ;
-private Button  a7a ;
-private TextView back ;
 private FirebaseAuth mAuth;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,8 +76,8 @@ private FirebaseAuth mAuth;
     public void onStart() {
         super.onStart();
         email=getActivity().findViewById(R.id.enteremail);
-        a7a=getActivity().findViewById(R.id.passforgot);
-        back =getActivity().findViewById(R.id.back);
+        Button a7a = getActivity().findViewById(R.id.passforgot);
+        TextView back = getActivity().findViewById(R.id.back);
         mAuth = FirebaseAuth.getInstance();
         a7a.setOnClickListener(view -> {
             if (!isEmailValid(email.getText().toString().trim())){
@@ -87,6 +86,10 @@ private FirebaseAuth mAuth;
                 return;
             }
             mAuth.sendPasswordResetEmail(email.getText().toString());
+            Toast.makeText(getContext(),"try to login now <3", Toast.LENGTH_LONG).show();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayout, new Login());
+            ft.commit();
         });
         back.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
