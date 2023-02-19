@@ -54,7 +54,7 @@ public class Playhard extends Fragment {
     private boolean mtimerrunning;
     private BestScores bestScores;
     private FireBaseServices db;
-    private ArrayList<BestScores> BestScores;
+    public ArrayList<BestScores> BestScores;
     private  int Best=0;
     private CallBack call;
 
@@ -103,19 +103,23 @@ public class Playhard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_playhard, container, false);
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (!currentUser.equals(null) ) {
-            userEmail = currentUser.getEmail();
-        }
         connect();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if (CurrentUser != null) {
+            userEmail = CurrentUser.getEmail();
+        }
+        else {
+            userEmail="hi";
+        }
+
         score = new Score(dateestring, 0, "Hard", userEmail);
-        bestScores = new BestScores(Best, userEmail);
+
 
 
         mcountdowntimer = new CountDownTimer(mtimeleft, 100) {
@@ -139,14 +143,11 @@ public class Playhard extends Fragment {
                         for (QueryDocumentSnapshot document : task.getResult()){
                             BestScores.add(document.toObject(BestScores.class));
                         }
-
+                        call.onCallBack(BestScores);
                     }
-                    call.onCallBack(BestScores);
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
-                });
-              gameH();
 
+                }).addOnFailureListener(e -> Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show());
+              gameH();
         exit.setOnClickListener(view1 -> {
             builder.setTitle("EXIT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("yup", (dialogInterface, i) -> {
                 db.getFire().collection("SCORE")
@@ -154,17 +155,11 @@ public class Playhard extends Fragment {
                         .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                         .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
                 BestScore();
-                db.getFire().collection("bestSCORE").document(userEmail)
-                        .set(bestScores)
-                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot set with ID: " + documentReference))
-                        .addOnFailureListener(e -> Log.w(TAG, "Error setting document", e));
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameLayout, new HomePage());
                 ft.commit();
             }).show();
-
         });
-
     }
 
     public void connect() {
@@ -186,11 +181,7 @@ public class Playhard extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    private int from0to8() {
-        Random random = new Random();
-        int i = random.nextInt(8);
-        return i;
-    }
+
     public void gameH() {
 
         ImageView[] CIRCLE1 = {circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
@@ -253,63 +244,51 @@ public class Playhard extends Fragment {
             gameH();
             resetTime();
 
-        } else if (score.getScore() < 150) {
-
+        }
+        else if (score.getScore() < 150)
+        {
             db.getFire().collection("SCORE")
                     .add(score)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             BestScore();
-            db.getFire().collection("bestSCORE").document(userEmail)
-                    .set(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
             builder.setTitle("bad luck").setMessage("I knew you didn't have it in you TwT  ").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
-
-        } else if (score.getScore() > 150 && score.getScore() < 600) {
+        }
+        else if (score.getScore() > 150 && score.getScore() < 600)
+        {
 
             db.getFire().collection("SCORE")
                     .add(score)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             BestScore();
-            db.getFire().collection("bestSCORE").document(userEmail)
-                    .set(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             builder.setTitle("BAD LUCK").setMessage("wrong answer baby").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
-        } else if (score.getScore() > 600 && score.getScore() < 1500) {
+        }
+        else if (score.getScore() > 600 && score.getScore() < 1500)
+        {
             db.getFire().collection("SCORE")
                     .add(score)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             BestScore();
-            db.getFire().collection("bestSCORE").document(userEmail)
-                    .set(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             builder.setTitle("BAD LUCK").setMessage("HAHA I knew you couldn't make it XD ").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
-        } else {
-
+        }
+        else
+        {
             db.getFire().collection("SCORE")
                     .add(score)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             BestScore();
-            db.getFire().collection("bestSCORE").document(userEmail)
-                    .set(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             builder.setTitle("BAD LUCK").setMessage("HAHA it's hard isn't it  ?ToT").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
@@ -366,14 +345,26 @@ public class Playhard extends Fragment {
     private void  GetTheBestScoreOfTheUser(){
         for (int i = 0 ; i< BestScores.size();i++){
             if (BestScores.get(i).geteMAIL().equals(userEmail)){
-              Best= BestScores.get(i).getBestScore();
+                bestScores = BestScores.get(i);
             }
         }
     }
     private  void  BestScore(){
-       if (Best<score.getScore()){
+        if (bestScores.equals(null)){
+            return;
+        }
+       if (bestScores.getBestScore()<score.getScore()){
            bestScores.setBestScore(score.getScore());
+           db.getFire().collection("bestSCORE").document(userEmail)
+                   .set(bestScores)
+                   .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference))
+                   .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
        }
+    }
+    private int from0to8() {
+        Random random = new Random();
+        int i = random.nextInt(8);
+        return i;
     }
 
 

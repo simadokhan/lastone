@@ -4,15 +4,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class BestScores {
-    int BestScore ;
-    String eMAIL ;
+   private int BestScore ;
+   private String eMAIL ;
 
     public BestScores(int bestScore, String eMAIL) {
-        BestScore = bestScore;
+       this.BestScore = bestScore;
         this.eMAIL = eMAIL;
     }
 
-    public BestScores() {
+    public BestScores(){
     }
 
     public int getBestScore() {
