@@ -49,7 +49,7 @@
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/Top10"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/backhome"
@@ -87,7 +87,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/Top10"
         android:layout_width="163dp"
         android:layout_height="0dp"
         android:layout_marginStart="47dp"

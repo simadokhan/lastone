@@ -13,7 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
@@ -26,14 +31,11 @@ public class HomePage extends Fragment {
     private FireBaseServices db;
     private TextView bestscore;
     private MediaPlayer mediaPlayer;
-
-
-
-
-
-    private ArrayList<BestScores>bestScore;
     private BestScores bestScores;
-    String userEmail ;
+    private String userEmail ;
+    private CallBack call;
+    private ArrayList<BestScores> BestScores;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -88,11 +90,23 @@ public class HomePage extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            userEmail= currentUser.getEmail();
-//        }
         connect();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            userEmail= currentUser.getEmail();
+        }
+        call = bestScores -> GetTheBestScoreOfTheUser();
+        db.getFire().collection("bestSCORE")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()){
+                            BestScores.add(document.toObject(BestScores.class));
+                        }
+                        call.onCallBack(BestScores);
+                    }
+                }).addOnFailureListener(e -> Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show());
+
         help.setOnClickListener(view1-> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new helprel());
@@ -132,9 +146,11 @@ public class HomePage extends Fragment {
         db= FireBaseServices.getinstance();
         bestscore=getView().findViewById(R.id.bestscore);
         mediaPlayer=MediaPlayer.create(getContext(),R.raw.music1);
+        BestScores=new ArrayList<>();
 
 
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.the3points,menu);
@@ -159,4 +175,12 @@ public class HomePage extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+    public void  GetTheBestScoreOfTheUser(){
+        for (int i = 0 ; i< BestScores.size();i++){
+            if (BestScores.get(i).geteMAIL().equals(userEmail)){
+                bestScores = BestScores.get(i);
+            }
+        }
+        bestscore.setText("Ur Best Score :)  "+bestScores.getBestScore());
     }
+}

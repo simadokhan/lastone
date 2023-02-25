@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
@@ -36,13 +37,15 @@ private Spinner spinner;
 private ProgressBar loadingPB;
 private RecyclerView CareerRV;
 private MyAdpter ScoreRVAdapter;
- private  Score c ;
+ private CallBackScores Call;
+ private CallBack callBack;
 
 private ArrayList<Score> Scores = new ArrayList<>();
-private ArrayList<String> ALL_play = new ArrayList<>();
-private ArrayList<String> Hard_play = new ArrayList<>();
-private ArrayList<String> ES_play = new ArrayList<>();
-private ArrayList<String> Mid_play = new ArrayList<>();
+private ArrayList<BestScores> BestScores = new ArrayList<>();
+private ArrayList<Score> ALL_play = new ArrayList<>();
+private ArrayList<Score> Hard_play = new ArrayList<>();
+private ArrayList<Score> ES_play = new ArrayList<>();
+private ArrayList<Score> Mid_play = new ArrayList<>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -92,41 +95,60 @@ private ArrayList<String> Mid_play = new ArrayList<>();
     public void onStart() {
         super.onStart();
         connect();
-        CareerRV.setHasFixedSize(true);
-        CareerRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        ScoreRVAdapter = new MyAdpter(Scores, getContext());
-        CareerRV.setAdapter(ScoreRVAdapter);
-        ArrayAdapter<CharSequence> adapter;
-        adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.All, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        BACKhome.setOnClickListener(view -> {
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameLayout, new HomePage());
-            ft.commit();
-        });
-        //ToDo: for (hard , easy , mid ) and connecting it with the spinner + the Top 10 thing
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            userEmail= currentUser.getEmail();
+        }
+        Call=Scores->GetTheBestScoreOfTheUser();
         db.collection("SCORE")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult())
-                           Scores.add(document.toObject(Score.class));
+                            Scores.add(document.toObject(Score.class));
                     }
+                    Call.onCallBack(Scores);
                 }).addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
                 });
 
-        // TODO :
-        //  adding the data to recycler view.
-        CareerRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        CareerRV.setAdapter(ScoreRVAdapter);
+        db.collection("bestSCORE")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()){
+                            BestScores.add(document.toObject(BestScores.class));
+                        }
+                    }
+                    callBack.onCallBack(BestScores);
+                    CareerRV.setHasFixedSize(true);
+                    CareerRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                    ScoreRVAdapter = new MyAdpter(getContext(),(BestScores));
+                    CareerRV.setAdapter(ScoreRVAdapter);
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
+                });
+
+        BACKhome.setOnClickListener(view -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayout, new HomePage());
+            ft.commit();
+        });
+        ArrayAdapter<CharSequence> adapter;
+        adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.All, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        callBack=BestScores->TheTop10(BestScores);
+
 
 
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (spinner.getSelectedItem().toString().equals("Hard")){
+
+        }
 
     }
 
@@ -139,6 +161,46 @@ private ArrayList<String> Mid_play = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         spinner=getView().findViewById(R.id.spinner);
         loadingPB = getView().findViewById(R.id.idProgressBar);
-        CareerRV = getView().findViewById(R.id.recyclerViewCarer);
+        CareerRV = getView().findViewById(R.id.Top10);
+    }
+    public void  GetTheBestScoreOfTheUser(){
+        for (int i = 0 ; i< Scores.size();i++){
+            if (Scores.get(i).getEmail().equals(userEmail)){
+                ALL_play.add(Scores.get(i));
+            }
+        }
+    }
+    public void TheModes(){
+        for (int i = 0 ; i < ALL_play.size();i++){
+            if(ALL_play.get(i).getMoDE().equals("Hard"))
+            {
+                Hard_play.add(ALL_play.get(i));
+            }else  if(ALL_play.get(i).getMoDE().equals("Mid"))
+            {
+                Mid_play.add(ALL_play.get(i));
+            }else  if(ALL_play.get(i).getMoDE().equals("easy"))
+            {
+                ES_play.add(ALL_play.get(i));
+            }
+
+        }
+    }
+    public void TheTop10(ArrayList<BestScores>s){
+
+        BestScores max ;
+        ArrayList<BestScores>MAX=new ArrayList<>();
+        while (s.size()>0){
+            max=s.get(0);
+            for (int i =0; i<s.size();i++){
+                if(s.get(i).getBestScore()>max.getBestScore()){
+                    max.setBestScore(s.get(i).getBestScore());
+                }
+            }
+            MAX.add(max);
+            s.remove(max);
+        }
+        for (int i = 0 ; i <MAX.size();i++){
+          s.add(MAX.get(i));
+        }
     }
 }

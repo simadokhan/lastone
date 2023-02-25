@@ -54,7 +54,7 @@ public class Playhard extends Fragment {
     private boolean mtimerrunning;
     private BestScores bestScores;
     private FireBaseServices db;
-    public ArrayList<BestScores> BestScores;
+    private ArrayList<BestScores> BestScores;
     private  int Best=0;
     private CallBack call;
 
@@ -117,11 +117,7 @@ public class Playhard extends Fragment {
         else {
             userEmail="hi";
         }
-
         score = new Score(dateestring, 0, "Hard", userEmail);
-
-
-
         mcountdowntimer = new CountDownTimer(mtimeleft, 100) {
             @Override
             public void onTick(long millisuntilFinished) {
@@ -134,7 +130,6 @@ public class Playhard extends Fragment {
                 mtimerrunning = false;
             }
         }.start();
-
         call = bestScores -> GetTheBestScoreOfTheUser();
         db.getFire().collection("bestSCORE")
                 .get()
@@ -342,7 +337,7 @@ public class Playhard extends Fragment {
         return score.getScore();
     }
 
-    private void  GetTheBestScoreOfTheUser(){
+    public void  GetTheBestScoreOfTheUser(){
         for (int i = 0 ; i< BestScores.size();i++){
             if (BestScores.get(i).geteMAIL().equals(userEmail)){
                 bestScores = BestScores.get(i);
