@@ -1,10 +1,15 @@
 package com.example.test;
+import static android.content.ContentValues.TAG;
+
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -91,6 +96,9 @@ public class HomePage extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         connect();
+        if (!mediaPlayer.isPlaying()){
+        mediaPlayer.start();
+        }
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             userEmail= currentUser.getEmail();
@@ -136,6 +144,17 @@ public class HomePage extends Fragment {
         });
     }
 
+    public void GetTheBestScoreOfTheUser() {
+        for (int i = 0 ; i< BestScores.size();i++){
+            if (BestScores.get(i).geteMAIL().equals(userEmail)){
+                bestScores = BestScores.get(i);
+            }
+        }
+        if(bestScores!=null){
+      bestscore.setText("Ur Best Score :)  "+bestScores.getBestScore());
+        }else return;
+    }
+
     private void connect() {
         mAuth = FirebaseAuth.getInstance();
         help=getView().findViewById(R.id.help);
@@ -145,7 +164,12 @@ public class HomePage extends Fragment {
         Carrer=getView().findViewById(R.id.carrer1);
         db= FireBaseServices.getinstance();
         bestscore=getView().findViewById(R.id.bestscore);
-        mediaPlayer=MediaPlayer.create(getContext(),R.raw.music1);
+        mediaPlayer=MyMedia.getInstance(getContext());
+        try {
+            mediaPlayer.prepare();
+        }catch (Exception e){
+            Log.e(TAG, "  ",e );
+        }
         BestScores=new ArrayList<>();
 
 
@@ -154,33 +178,34 @@ public class HomePage extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.the3points,menu);
-
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
+            case 2131296613: {
 
-            case R.id.musicON:
-                mediaPlayer.start();
-            case R.id.musicoff:
-                mediaPlayer.stop();
-            case R.id.soundoff:
-               // mediaPlayer.stop();
-            case R.id.soundON:
-                //mediaPlayer.start();
+                Log.d(TAG, "on"+item.getItemId());
+                if (!mediaPlayer.isPlaying())
+                {
+                    mediaPlayer.start();
+                }
+                return true;
 
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    public void  GetTheBestScoreOfTheUser(){
-        for (int i = 0 ; i< BestScores.size();i++){
-            if (BestScores.get(i).geteMAIL().equals(userEmail)){
-                bestScores = BestScores.get(i);
             }
+            case 2131296614: {
+
+                Log.d(TAG, "off"+item.getItemId());
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                }
+                return true;
+
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+
         }
-        bestscore.setText("Ur Best Score :)  "+bestScores.getBestScore());
     }
 }

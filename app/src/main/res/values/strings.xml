@@ -12,6 +12,7 @@
     <string name="turn_the_music_off">turn_the_music_off</string>
     <string name="turn_the_sound_off">turn_the_sound_off</string>
     <string name="icolor_is_a_game_that_test_your_ability_to_distinguish_the_colors_over_small_quiz_the_quiz_is_that_u_have_4_circles_or_more_and_one_of_this_circles_has_a_different_color_and_you_need_to_find_it_it_seems_easy_at_first_but_it_is_not">Icolor is a game that test your ability to Distinguish the colors over small quiz: The quiz is that u have 4 circles or more and one of this circles has a different color and you need to find it , it seems easy at first but it is not</string>
+    <string name="user">User:</string>
     <string-array name="All">
     <item>All</item>
        <item>Hard</item>

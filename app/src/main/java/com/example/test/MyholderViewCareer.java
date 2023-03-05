@@ -6,11 +6,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyholderView extends RecyclerView.ViewHolder {
-public TextView Score,User;
-    public MyholderView(@NonNull View itemView) {
+public class MyholderViewCareer extends RecyclerView.ViewHolder {
+public TextView Score,Mode,Date;
+    public MyholderViewCareer(@NonNull View itemView) {
         super(itemView);
         Score= itemView.findViewById(R.id.Score);
-        User =itemView.findViewById(R.id.Mode);
+        Mode =itemView.findViewById(R.id.Mode);
+        Date=itemView.findViewById(R.id.date);
     }
 }

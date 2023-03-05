@@ -13,10 +13,15 @@ public class MyAdpter extends RecyclerView.Adapter<MyholderView> {
     public MyholderView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyholderView(LayoutInflater.from(context).inflate(R.layout.careerrecyclerview,parent,false));
     }
+//    public String UserName(String name){
+//        String newname;
+//     for (int i =0 ; i < name.length()-10;i++){
+//     }
+//    }
     @Override
     public void onBindViewHolder(@NonNull MyholderView holder, int position) {
-     holder.Score.setText(Scores.get(position).getBestScore());
-     holder.User.setText(Scores.get(position).geteMAIL());
+     holder.Score.setText("The score : "+Scores.get(position).getBestScore());
+     holder.User.setText("the user : "+Scores.get(position).geteMAIL());
     }
     @Override
     public int getItemCount() {

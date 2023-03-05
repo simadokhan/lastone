@@ -43,10 +43,9 @@ private final long starttimeinmillis=60000;
 private AlertDialog.Builder builder;
 private long mtimeleft=starttimeinmillis;
 private FireBaseServices db;
-public String userEmail;
+private String userEmail;
 FirebaseAuth  mAuth = FirebaseAuth.getInstance();
-protected Score score;
-    private  BestScores bestScores;
+private Score score;
 private boolean mtimerrunning;
 
     // TODO: define present correct ImageView holder
@@ -100,21 +99,12 @@ private boolean mtimerrunning;
            userEmail= currentUser.getEmail();
         }
         score=new Score(dateestring,0,"easy",userEmail);
-        bestScores = new BestScores(0,userEmail);
         connect();
         game();
         StartTimer();
         exit.setOnClickListener(view1 -> {
             builder.setTitle("EXIT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("ok", (dialogInterface, i) -> {
-                db.getFire().collection("SCORE")
-                        .add(score)
-                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-                BestScore();
-                db.getFire().collection("best SCORE")
-                        .add(bestScores)
-                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                addingData();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameLayout, new HomePage());
                 ft.commit();
@@ -169,16 +159,7 @@ private boolean mtimerrunning;
             game();
         }else if (score.getScore()<500 ){
 
-            db.getFire().collection("SCORE")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-            BestScore();
-            db.getFire().collection("best SCORE")
-                    .add(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
+            addingData();
             builder.setTitle("bad luck").setMessage("I knew you didn't have it in you TwT  ").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
@@ -186,16 +167,7 @@ private boolean mtimerrunning;
         }
         else if (score.getScore()>500 && score.getScore()<2000 ){
 
-
-            db.getFire().collection("SCORE")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-            BestScore();
-            db.getFire().collection("best SCORE")
-                    .add(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            addingData();
 
             builder.setTitle("BAD LUCK").setMessage("wrong answer baby").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -204,15 +176,7 @@ private boolean mtimerrunning;
         }
         else if (score.getScore()>2000 && score.getScore()<4000 ){
 
-            db.getFire().collection("SCORE")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-            BestScore();
-            db.getFire().collection("best SCORE")
-                    .add(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            addingData();
 
             builder.setTitle("BAD LUCK").setMessage("HAHA I knew you couldn't make it XD ").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -222,16 +186,7 @@ private boolean mtimerrunning;
         else {
 
 
-            db.getFire().collection("SCORE")
-                    .add(score)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-            BestScore();
-            db.getFire().collection("best SCORE")
-                    .add(bestScores)
-                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-
+            addingData();
             builder.setTitle("BAD LUCK").setMessage("HAHA it's hard isn't it  ?ToT").show();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
@@ -284,10 +239,11 @@ private boolean mtimerrunning;
         return score.getScore();
     }
 
-    private  void  BestScore(){
-        if (score.getScore()> bestScores.getBestScore()){
-            bestScores.setBestScore(score.getScore());
-        }
+    public void addingData(){
+        db.getFire().collection("SCORE")
+                .add(score)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
 }

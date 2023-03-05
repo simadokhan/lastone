@@ -1,5 +1,6 @@
 package com.example.test;
 
+import static android.content.ContentValues.TAG;
 import static com.example.test.Login.isEmailValid;
 
 
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +94,7 @@ public class SignUp extends Fragment {
         attachComponents();
         donesignup.setOnClickListener(view -> {
             check();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameLayout, new HomePage());
-            ft.commit();
+
         });
         gotologin.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -131,7 +131,7 @@ public class SignUp extends Fragment {
         }
         if (password.length() < 8) {
             etpasswordsignup.setError("wrong password");
-            // Toast.makeText(getContext(), "wrong password", Toast.LENGTH_SHORT).show();
+             Toast.makeText(getContext(), "wrong password", Toast.LENGTH_SHORT).show();
             etpasswordsignup.requestFocus();
             return;
         }
@@ -140,13 +140,12 @@ public class SignUp extends Fragment {
             etpassword2signup.requestFocus();
             return;
         }
-        mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> {
-            Toast.makeText(getContext(), "Account created.", Toast.LENGTH_SHORT).show();
-            if (mAuth.getCurrentUser() != null) {
-                mAuth.signOut();
-            }
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(authResult -> {
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout, new HomePage());
+                ft.commit();
         }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"(singing UP filed)", Toast.LENGTH_SHORT).show();
         });
     }
     }

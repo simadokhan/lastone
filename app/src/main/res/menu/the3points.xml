@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
 
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/musicON"
-        android:title="@string/turn_the_music_on" />
-    <item android:id="@+id/soundON"
-        android:title="@string/turn_the_sound_on" />
+        android:icon="@drawable/baseline_volume_up_24"
+        android:title="turn_the_music_on"
+        app:showAsAction="ifRoom"/>
     <item android:id="@+id/musicoff"
-        android:title="turn the music off" />
-    <item android:id="@+id/soundoff"
-        android:title="turn the sound off" />
-
+        android:icon="@drawable/baseline_volume_off_24"
+        android:title="turn the music off"
+        app:showAsAction="ifRoom"/>
 </menu>

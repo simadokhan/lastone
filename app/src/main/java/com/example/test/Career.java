@@ -1,4 +1,7 @@
 package com.example.test;
+import static android.content.ContentValues.TAG;
+
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -6,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +40,9 @@ private String userEmail;
 private FirebaseFirestore db = FirebaseFirestore.getInstance();
 private Spinner spinner;
 private ProgressBar loadingPB;
-private RecyclerView CareerRV;
+private RecyclerView CareerRV ,CreerCR;
 private MyAdpter ScoreRVAdapter;
+private MyAdpterCareer ScoreCR;
  private CallBackScores Call;
  private CallBack callBack;
 
@@ -46,6 +52,7 @@ private ArrayList<Score> ALL_play = new ArrayList<>();
 private ArrayList<Score> Hard_play = new ArrayList<>();
 private ArrayList<Score> ES_play = new ArrayList<>();
 private ArrayList<Score> Mid_play = new ArrayList<>();
+    private AlertDialog.Builder builder;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -108,10 +115,13 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
                             Scores.add(document.toObject(Score.class));
                     }
                     Call.onCallBack(Scores);
+                    CreerCR.setHasFixedSize(true);
+                    CreerCR.setLayoutManager(new LinearLayoutManager(getContext()));
+
                 }).addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
                 });
-
+        callBack=BestScores->TheTop10(BestScores);
         db.collection("bestSCORE")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -139,22 +149,34 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        callBack=BestScores->TheTop10(BestScores);
+
 
 
 
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        TheModes();
         if (spinner.getSelectedItem().toString().equals("Hard")){
-
+           ScoreCR=new MyAdpterCareer(getContext(),Hard_play);
+            CreerCR.setAdapter(ScoreCR);
+        }else if (spinner.getSelectedItem().toString().equals("Medium")){
+           ScoreCR=new MyAdpterCareer(getContext(),Mid_play);
+            CreerCR.setAdapter(ScoreCR);
+        }else if (spinner.getSelectedItem().toString().equals("Easy")){
+           ScoreCR=new MyAdpterCareer(getContext(),ES_play);
+            CreerCR.setAdapter(ScoreCR);
+        }else {
+            ScoreCR=new MyAdpterCareer(getContext(),ALL_play);
+            CreerCR.setAdapter(ScoreCR);
         }
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        ScoreCR=new MyAdpterCareer(getContext(),ALL_play);
+        CreerCR.setAdapter(ScoreCR);
     }
     public  void  connect(){
         BACKhome=getView().findViewById(R.id.backhome);
@@ -162,13 +184,23 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
         spinner=getView().findViewById(R.id.spinner);
         loadingPB = getView().findViewById(R.id.idProgressBar);
         CareerRV = getView().findViewById(R.id.Top10);
+        CreerCR=getView().findViewById(R.id.recyclerViewCarer);
     }
     public void  GetTheBestScoreOfTheUser(){
+        if(!Scores.isEmpty()){
         for (int i = 0 ; i< Scores.size();i++){
-            if (Scores.get(i).getEmail().equals(userEmail)){
+            Log.d(TAG, "GetTheBestScoreOfTheUser: "+userEmail+Scores.get(i).getEmail());
+            if (Scores.get(i).getEmail()!=null&&Scores.get(i).getEmail().equals(userEmail)){
+                Log.d(TAG, "nj7t  "+i);
                 ALL_play.add(Scores.get(i));
             }
+
         }
+
+        }else {
+            Toast.makeText(getContext(), "u did not play ur first game ", Toast.LENGTH_SHORT).show();
+        }
+        loadingPB.setVisibility(View.GONE);
     }
     public void TheModes(){
         for (int i = 0 ; i < ALL_play.size();i++){
@@ -193,7 +225,7 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
             max=s.get(0);
             for (int i =0; i<s.size();i++){
                 if(s.get(i).getBestScore()>max.getBestScore()){
-                    max.setBestScore(s.get(i).getBestScore());
+                    max=s.get(i);
                 }
             }
             MAX.add(max);
@@ -201,6 +233,7 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
         }
         for (int i = 0 ; i <MAX.size();i++){
           s.add(MAX.get(i));
+          s.get(i).seteMAIL(s.get(i).geteMAIL().replace("@gmail.com",""));
         }
     }
 }
