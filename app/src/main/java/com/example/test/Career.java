@@ -2,6 +2,7 @@ package com.example.test;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -39,15 +41,14 @@ private FirebaseAuth mAuth;
 private String userEmail;
 private FirebaseFirestore db = FirebaseFirestore.getInstance();
 private Spinner spinner;
+private Button sginout;
 private ProgressBar loadingPB;
-private RecyclerView CareerRV ,CreerCR;
-private MyAdpter ScoreRVAdapter;
+private RecyclerView CreerCR;
 private MyAdpterCareer ScoreCR;
  private CallBackScores Call;
- private CallBack callBack;
+
 
 private ArrayList<Score> Scores = new ArrayList<>();
-private ArrayList<BestScores> BestScores = new ArrayList<>();
 private ArrayList<Score> ALL_play = new ArrayList<>();
 private ArrayList<Score> Hard_play = new ArrayList<>();
 private ArrayList<Score> ES_play = new ArrayList<>();
@@ -121,38 +122,23 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
                 }).addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
                 });
-        callBack=BestScores->TheTop10(BestScores);
-        db.collection("bestSCORE")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()){
-                            BestScores.add(document.toObject(BestScores.class));
-                        }
-                    }
-                    callBack.onCallBack(BestScores);
-                    CareerRV.setHasFixedSize(true);
-                    CareerRV.setLayoutManager(new LinearLayoutManager(getContext()));
-                    ScoreRVAdapter = new MyAdpter(getContext(),(BestScores));
-                    CareerRV.setAdapter(ScoreRVAdapter);
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "no data || something wrong ", Toast.LENGTH_SHORT).show();
-                });
-
         BACKhome.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
+        });
+        sginout.setOnClickListener(view -> {
+            builder.setTitle("signOUT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("yup", (dialogInterface, i) -> {
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout, new Login());
+                ft.commit();
+            }).show();
         });
         ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.All, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
-
-
-
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -180,10 +166,11 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
     }
     public  void  connect(){
         BACKhome=getView().findViewById(R.id.backhome);
+        builder=new AlertDialog.Builder(getContext());
         mAuth = FirebaseAuth.getInstance();
         spinner=getView().findViewById(R.id.spinner);
         loadingPB = getView().findViewById(R.id.idProgressBar);
-        CareerRV = getView().findViewById(R.id.Top10);
+        sginout=getActivity().findViewById(R.id.signOUT);
         CreerCR=getView().findViewById(R.id.recyclerViewCarer);
     }
     public void  GetTheBestScoreOfTheUser(){
@@ -217,23 +204,5 @@ private ArrayList<Score> Mid_play = new ArrayList<>();
 
         }
     }
-    public void TheTop10(ArrayList<BestScores>s){
 
-        BestScores max ;
-        ArrayList<BestScores>MAX=new ArrayList<>();
-        while (s.size()>0){
-            max=s.get(0);
-            for (int i =0; i<s.size();i++){
-                if(s.get(i).getBestScore()>max.getBestScore()){
-                    max=s.get(i);
-                }
-            }
-            MAX.add(max);
-            s.remove(max);
-        }
-        for (int i = 0 ; i <MAX.size();i++){
-          s.add(MAX.get(i));
-          s.get(i).seteMAIL(s.get(i).geteMAIL().replace("@gmail.com",""));
-        }
-    }
 }

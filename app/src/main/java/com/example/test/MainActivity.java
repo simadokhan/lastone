@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity implements The3Points {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayout, new Login());
         ft.commit();
-
     }
 
 

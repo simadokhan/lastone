@@ -18,9 +18,6 @@ public class BallGenerator {
         return b_value;
     }
 
-    public String GetColors() {
-        return "red:" + this.r_value + " blue: " + this.b_value + " green:" + this.g_value;
-    }
 
     public BallGenerator() {
         this.r_value = new Random().nextInt((245 - 50) + 1) + 50;

@@ -76,10 +76,10 @@ private FirebaseAuth mAuth;
     public void onStart() {
         super.onStart();
         email=getActivity().findViewById(R.id.enteremail);
-        Button a7a = getActivity().findViewById(R.id.passforgot);
+        Button done = getActivity().findViewById(R.id.passforgot);
         TextView back = getActivity().findViewById(R.id.back);
         mAuth = FirebaseAuth.getInstance();
-        a7a.setOnClickListener(view -> {
+        done.setOnClickListener(view -> {
             if (!isEmailValid(email.getText().toString().trim())){
                 email.requestFocus();
                 email.setError("email is wrong ");

@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class HomePage extends Fragment {
     private FirebaseAuth mAuth;
-    private Button help,playHARD,playMID,playEASY,Carrer;
+    private Button help,playHARD,playMID,playEASY,Carrer,Topplayers;
     private FireBaseServices db;
     private TextView bestscore;
     private MediaPlayer mediaPlayer;
@@ -142,6 +142,12 @@ public class HomePage extends Fragment {
             ft.commit();
 
         });
+        Topplayers.setOnClickListener(v -> {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameLayout, new TOP10());
+            ft.commit();
+        });
+
     }
 
     public void GetTheBestScoreOfTheUser() {
@@ -162,6 +168,7 @@ public class HomePage extends Fragment {
         playHARD=getView().findViewById(R.id.playHARD);
         playEASY=getView().findViewById(R.id.playES);
         Carrer=getView().findViewById(R.id.carrer1);
+        Topplayers=getView().findViewById(R.id.Top10);
         db= FireBaseServices.getinstance();
         bestscore=getView().findViewById(R.id.bestscore);
         mediaPlayer=MyMedia.getInstance(getContext());

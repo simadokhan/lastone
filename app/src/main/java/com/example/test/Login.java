@@ -43,7 +43,6 @@ public class Login extends Fragment {
     private String mParam2;
 
     public Login() {
-        // Required empty public constructor
     }
 
     /**

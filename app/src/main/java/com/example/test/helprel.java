@@ -27,10 +27,8 @@ import org.checkerframework.common.subtyping.qual.Bottom;
  *
  */
 public class helprel extends Fragment {
-    ImageView backtohome;
-    Button sginout;
-    private FirebaseAuth mAuth;
-    private AlertDialog.Builder builder;
+    private ImageView backtohome;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -83,24 +81,12 @@ public class helprel extends Fragment {
     public void onStart() {
         super.onStart();
         backtohome=getActivity().findViewById(R.id.BACKTO);
-        sginout=getActivity().findViewById(R.id.bbbb);
-        builder=new AlertDialog.Builder(getContext());
-        mAuth = FirebaseAuth.getInstance();
         backtohome.setOnClickListener(view -> {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.frameLayout, new HomePage());
             ft.commit();
         });
-            sginout.setOnClickListener(view -> {
-                builder.setTitle("signOUT").setMessage("ARE U SURE").setCancelable(true).setPositiveButton("yup", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.frameLayout, new Login());
-                        ft.commit();
-                    }
-                }).show();
-            });
+
 
         }
 }

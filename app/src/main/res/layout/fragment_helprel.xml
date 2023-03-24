@@ -10,75 +10,89 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="192dp"
-        android:layout_height="148dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/hi"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
-        app:layout_constraintStart_toStartOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/bbbb"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="140dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="138dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="133dp"
-        android:layout_marginBottom="43dp"
-        android:backgroundTint="#7BD1E8"
-        android:fontFamily="sans-serif-smallcaps"
-        android:onClick="didaacc"
-        android:text="signOUT"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:typeface="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="355dp"
-        android:layout_height="336dp"
-        android:layout_marginTop="60dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="@string/icolor_is_a_game_that_test_your_ability_to_distinguish_the_colors_over_small_quiz_the_quiz_is_that_u_have_4_circles_or_more_and_one_of_this_circles_has_a_different_color_and_you_need_to_find_it_it_seems_easy_at_first_but_it_is_not"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#2E2B1E"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:typeface="sans"
-        app:layout_constraintBottom_toTopOf="@+id/bbbb"
-        app:layout_constraintEnd_toEndOf="@+id/bbbb"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toStartOf="@+id/bbbb"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <ImageView
         android:id="@+id/BACKTO"
         android:layout_width="58dp"
         android:layout_height="71dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginBottom="137dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="89dp"
+        android:layout_marginBottom="7dp"
         android:contentDescription="TODO"
         android:src="@drawable/back"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintBottom_toTopOf="@+id/textView6"
+        app:layout_constraintEnd_toStartOf="@+id/imageView6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="234dp"
+        android:layout_height="467dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="73dp"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/now"
+        app:layout_constraintBottom_toTopOf="@+id/imageView12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView11"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="85dp"
+        android:layout_height="191dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="40dp"
+        android:text="u only have to choose the different color"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/imageView11"
+        app:layout_constraintEnd_toStartOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BACKTO" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="112dp"
+        android:layout_height="132dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/siitpanda"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintEnd_toStartOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="134dp"
+        android:layout_height="165dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="23dp"
+        android:text="and if u wanna exit just hit the panda XD"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView12"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView11" />
+
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="209dp"
+        android:layout_height="170dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="43dp"
+        android:src="@drawable/exitfin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
