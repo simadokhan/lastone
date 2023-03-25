@@ -22,11 +22,11 @@ public class MyAdpter extends RecyclerView.Adapter<MyholderView> {
     }
     @Override
     public void onBindViewHolder(@NonNull MyholderView holder, int position) {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            userEmail= currentUser.getEmail();
-        }
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser != null){
+//            userEmail= currentUser.getEmail();
+//        }
 
         if ( position == 0 ){
             holder.Score.setText("The Best Score : "+Scores.get(position).getBestScore());
@@ -47,12 +47,12 @@ public class MyAdpter extends RecyclerView.Adapter<MyholderView> {
             holder.User.setText("The Top 3 player  : "+Scores.get(position).geteMAIL());
             holder.User.setTextColor(Color.rgb(176,141,87));
         }
-        else   if (Scores.get(position).geteMAIL()== userEmail ){
-            holder.Score.setText("The score : "+Scores.get(position).getBestScore());
-            holder.Score.setTextColor(Color.rgb(162,241,239));
-            holder.User.setText("The Player: "+Scores.get(position).geteMAIL());
-            holder.User.setTextColor(Color.rgb(207,181,59));
-        }
+//        else   if (Scores.get(position).geteMAIL()== userEmail ){
+//            holder.Score.setText("The score : "+Scores.get(position).getBestScore());
+//            holder.Score.setTextColor(Color.rgb(162,241,239));
+//            holder.User.setText("The Player: "+Scores.get(position).geteMAIL());
+//            holder.User.setTextColor(Color.rgb(207,181,59));
+//        }
      else  {holder.Score.setText("The score : "+Scores.get(position).getBestScore());
      holder.User.setText("The Player : "+Scores.get(position).geteMAIL());}
     }
